@@ -1,35 +1,51 @@
-import Database from "../Database/index.js";
+import * as dao from "./dao.js";
+
 export default function CourseRoutes(app) {
-    app.post("/api/courses", (req, res) => {
-        const course = {
-            ...req.body,
-            _id: new Date().getTime().toString()
-        };
-        Database.courses.push(course);
-        res.send(course);
-    });
+    const findAllCourses = async (req, res) => {
+        const courses = await dao.findAllCourses();
+        res.json(courses);
+    };
+    app.get("/api/courses", findAllCourses);
 
-    app.get("/api/courses", (req, res) => {
-        const courses = Database.courses;
-        res.send(courses);
-    });
 
-    app.delete("/api/courses/:id", (req, res) => {
+    const findCourseById = async (req, res) => {
+        const course = await dao.findCourseById(req.params.id);
+        res.json(course);
+    }
+    app.get("/api/courses/:id", findCourseById);
+
+    const deleteCourse = async (req, res) => {
         const { id } = req.params;
-        Database.courses = Database.courses.filter((c) => c._id !== id);
-        res.sendStatus(204);
-    });
+        const status = await dao.deleteCourse(id);
+        res.json(status);
+        console.log("Course deleted, id:", id);
+    }
+    app.delete("/api/courses/:id", deleteCourse);
 
+    const createCourse = async (req, res) => {
+        try {
+            // Check if course ID is already in the database
+            if (await dao.findCourseById(req.body.id)) {
+                return res.status(400).json({ message: "Course ID already taken" });
+            }
 
-    app.put("/api/courses/:id", (req, res) => {
+            // Create a new course
+            const course = await dao.createCourse(req.body);
+            res.json(course);
+            console.log("Course created, id:", req.body.id);
+        } catch (error) {
+            // Handle any errors that occur during the course creation
+            res.status(500).json({ message: "An error occurred while creating the course", error: error.message });
+        }
+    };
+    app.post("/api/courses", createCourse);
+
+    const updateCourse = async (req, res) => {
         const { id } = req.params;
-        const course = req.body;
-        Database.courses = Database.courses.map((c) =>
-            c._id === id ? { ...c, ...course } : c
-        );
-        res.sendStatus(204);
-    });
-
+        const status = await dao.updateCourse(id, req.body);
+        res.json(status);
+    };
+    app.put("/api/courses/:id", updateCourse);
 
 
 }
