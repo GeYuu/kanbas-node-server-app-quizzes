@@ -6,7 +6,11 @@ export default function UserRoutes(app) {
         res.json(user);
     };
 
-    const deleteUser = async (req, res) => { };
+    const deleteUser = async (req, res) => {
+        const status = await dao.deleteUser(req.params.userId);
+        res.json(status);
+    };
+
     const findAllUsers = async (req, res) => {
         const { role, name } = req.query;
         if (role) {
@@ -56,7 +60,7 @@ export default function UserRoutes(app) {
         const currentUser = await dao.findUserByCredentials(username, password);
         if (currentUser) {
             req.session["currentUser"] = currentUser;
-            console.log("Session created:", req.session["currentUser"]); // Log to verify
+
             res.json(currentUser);
         } else {
             res.status(401).json({ message: "Unable to login. Try again later." });

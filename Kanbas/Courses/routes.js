@@ -18,7 +18,7 @@ export default function CourseRoutes(app) {
         const { id } = req.params;
         const status = await dao.deleteCourse(id);
         res.json(status);
-        console.log("Course deleted, id:", id);
+        //console.log("Course deleted, id:", id);
     }
     app.delete("/api/courses/:id", deleteCourse);
 
@@ -32,7 +32,7 @@ export default function CourseRoutes(app) {
             // Create a new course
             const course = await dao.createCourse(req.body);
             res.json(course);
-            console.log("Course created, id:", req.body.id);
+            //console.log("Course created, id:", req.body.id);
         } catch (error) {
             // Handle any errors that occur during the course creation
             res.status(500).json({ message: "An error occurred while creating the course", error: error.message });
