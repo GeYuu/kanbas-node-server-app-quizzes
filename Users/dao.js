@@ -18,3 +18,9 @@ export const findUsersByPartialName = (partialName) => {
     });
 };
 export const findUsersByRole = (role) => model.find({ role: role }); // or just model.find({ role })
+
+export const updateUserProfile = (userId, profile) => model.updateOne({ _id: userId }, { $set: profile });
+
+export const enrollUser = (userId, courseId) => model.updateOne({ _id: userId }, { $push: { courses: courseId } });
+
+export const findEnrolledCourses = (userId) => model.findById(userId).select("courses").populate("courses");

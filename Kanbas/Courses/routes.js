@@ -48,4 +48,6 @@ export default function CourseRoutes(app) {
     app.put("/api/courses/:id", updateCourse);
 
 
+
+
 }

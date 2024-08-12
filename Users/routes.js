@@ -84,6 +84,58 @@ export default function UserRoutes(app) {
     };
 
 
+
+    app.put("/api/users/profile", async (req, res) => {
+        console.log("Initial request to update profile received"); // Log when the request starts
+        console.log("Session data:", req.session); // Log the session data early
+
+        const currentUser = req.session["currentUser"];
+        if (!currentUser) {
+            console.log("No user in session"); // This log shows the problem is with the session
+            return res.sendStatus(401); // Early return if no session is found
+        }
+
+        console.log("User ID from session:", currentUser._id); // Ensure this is a valid ObjectId
+        console.log("Profile data being updated:", req.body);
+
+        const updatedUser = await dao.updateUser(currentUser._id, req.body);
+        if (!updatedUser) {
+            return res.status(400).json({ message: "Update failed" });
+        }
+
+        req.session["currentUser"] = { ...currentUser, ...req.body };
+        res.json(updatedUser);
+    });
+
+
+
+
+    app.put("/api/users/enroll/:userId/:courseId", async (req, res) => {
+
+        const { userId, courseId } = req.params;
+
+        //check if the user is already enrolled
+        const user = await dao.findUserById(userId);
+        if (user.courses.includes(courseId)) {
+            res.status(400).json({ message: "User already enrolled in the course" });
+            return;
+        }
+
+        const status = await dao.enrollUser(userId, courseId);
+        res.json(status);
+    }
+    );
+
+    app.get("/api/users/enrolled/:userId", async (req, res) => {
+        const { userId } = req.params;
+        const courses = await dao.findEnrolledCourses(userId);
+        res.json(courses);
+    }
+    );
+
+
+
+
     app.post("/api/users", createUser);
     app.get("/api/users", findAllUsers);
     app.get("/api/users/:userId", findUserById);
