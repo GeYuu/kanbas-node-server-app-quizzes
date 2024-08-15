@@ -24,18 +24,25 @@ export default function CourseRoutes(app) {
 
     const createCourse = async (req, res) => {
         try {
+            const { userid, ...courseData } = req.body;
+
+            // Log the userid for debugging purposes
+            console.log("userid", userid);
+
             // Check if course ID is already in the database
-            if (await dao.findCourseById(req.body.id)) {
+            if (await dao.findCourseById(courseData._id)) {
                 return res.status(400).json({ message: "Course ID already taken" });
             }
 
-            // Create a new course
-            const course = await dao.createCourse(req.body);
+            // Add the creator's ID to the course data
+            const course = await dao.createCourse({
+                ...courseData,
+                createdBy: userid  // Set the createdBy field to the user's ID
+            });
+
             res.json(course);
-            //console.log("Course created, id:", req.body.id);
         } catch (error) {
-            // Handle any errors that occur during the course creation
-            res.status(500).json({ message: "An error occurred while creating the course", error: error.message });
+            res.status(500).json({ message: error.message });
         }
     };
     app.post("/api/courses", createCourse);

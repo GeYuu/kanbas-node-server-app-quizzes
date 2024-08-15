@@ -10,6 +10,7 @@ const courseSchema = new mongoose.Schema({
     credits: Number,
     description: String,
     imagePath: String,
+    createdBy: String,
 },
     { collection: "courses" }
 );

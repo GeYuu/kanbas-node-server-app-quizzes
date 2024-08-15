@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
     section: String,
     lastActivity: Date,
     totalActivity: String,
-    //a list of course ids
+    //a list of course ids that the user is enrolled in
     courses: [String],
 },
     { collection: "users" }
