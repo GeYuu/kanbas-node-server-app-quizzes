@@ -10,6 +10,7 @@ import mongoose from "mongoose";
 
 import session from "express-session";
 import UserRoutes from "./Users/routes.js";
+import QuizRoutes from './Kanbas/Quiz/routes.js';
 
 
 const CONNECTION_STRING = process.env.MONGO_CONNECTION_STRING || "mongodb://127.0.0.1:27017/kanbas"
@@ -46,5 +47,7 @@ Lab5(app)
 Hello(app)
 CourseRoutes(app);
 ModuleRoutes(app);
+QuizRoutes(app);
+
 AssignmentsRoutes(app);
 app.listen(process.env.PORT || 4000)
