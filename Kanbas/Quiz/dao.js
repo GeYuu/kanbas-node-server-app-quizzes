@@ -18,3 +18,11 @@ export const updateQuiz = (id, quiz) => model.updateOne({
 }, {
     $set: quiz
 });
+
+//turn published status to true if false
+//turn published status to false if true
+export const togglePublished
+    = (id) => model.findById(id).then(quiz => {
+        quiz.published = !quiz.published;
+        return quiz.save();
+    });

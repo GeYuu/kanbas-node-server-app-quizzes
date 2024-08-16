@@ -44,4 +44,14 @@ export default function QuizRoutes(app) {
     app.put("/api/quizzes/:qid", updateQuiz);
 
 
+    const togglePublished = async (req, res) => {
+        const { qid } = req.params;
+        const quiz = await dao.togglePublished(qid);
+        res.json(quiz);
+    }
+    app.put("/api/quizzes/:qid/publish", togglePublished);
+
+
 }
+
+
