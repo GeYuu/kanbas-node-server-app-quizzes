@@ -52,6 +52,11 @@ export default function QuizRoutes(app) {
     app.put("/api/quizzes/:qid/publish", togglePublished);
 
 
+
+
+
+
+
 }
 
 

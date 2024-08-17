@@ -30,6 +30,7 @@ const QuizSchema = new mongoose.Schema({
     timeLimit: Boolean,
     timeLimitEntry: Number,
     allowMultipleAttempts: Boolean,
+    attemptLimit: Number,
     showCorrectedAnswers: Boolean,
     accessCode: Boolean,
     accessCodeEntry: Number,

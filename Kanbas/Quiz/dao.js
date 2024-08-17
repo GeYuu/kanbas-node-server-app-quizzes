@@ -26,3 +26,6 @@ export const togglePublished
         quiz.published = !quiz.published;
         return quiz.save();
     });
+
+
+
