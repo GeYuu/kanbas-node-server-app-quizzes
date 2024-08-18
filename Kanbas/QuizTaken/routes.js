@@ -69,7 +69,7 @@ export default function QuizTakenRoutes(app) {
         //if the quiz is not taken yet, return 0
         const quizTaken = await dao.findQuizTakenByQuizIdAndStudentID(req.params.quizId, req.params.studentID);
         if (!quizTaken) {
-            res.json({ score: 0 });
+            res.json({ score: -1 });
         } else {
             res.json({ score: quizTaken.pointsEarned });
         }
