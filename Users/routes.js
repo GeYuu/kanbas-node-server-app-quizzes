@@ -79,12 +79,15 @@ export default function UserRoutes(app) {
         res.sendStatus(200);
     };
     const profile = (req, res) => {
+        console.log("Profile route accessed");
+        console.log("Session data:", req.session);
         const currentUser = req.session["currentUser"];
-        //console.log("Session data:", req.session); // Add this line
         if (!currentUser) {
-            res.sendStatus(401);
+            console.log("No current user in session");
+            res.status(401).json({ message: "Not authenticated" });
             return;
         }
+        console.log("Current user found:", currentUser);
         res.json(currentUser);
     };
 
@@ -150,6 +153,6 @@ export default function UserRoutes(app) {
     app.post("/api/users/signup", signup);
     app.post("/api/users/signin", signin);
     app.post("/api/users/signout", signout);
-    app.post("/api/users/profile", profile);
+    app.get("/api/users/profile", profile);
 
 }
