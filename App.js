@@ -23,27 +23,25 @@ app.use(
     cors({
         credentials: true,
         origin: process.env.NETLIFY_URL || "http://localhost:3000",
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
     })
 );
 const sessionOptions = {
     secret: process.env.SESSION_SECRET || "kanbas",
     resave: false,
     saveUninitialized: false,
-    cookie: {
-        secure: process.env.NODE_ENV !== "development",
-        sameSite: process.env.NODE_ENV === "development" ? "lax" : "none",
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    }
 };
+
 
 if (process.env.NODE_ENV !== "development") {
     sessionOptions.proxy = true;
-    sessionOptions.cookie.domain = process.env.NODE_SERVER_DOMAIN;
+    sessionOptions.cookie = {
+        sameSite: "none",
+        secure: true,
+        domain: process.env.NODE_SERVER_DOMAIN,
+    };
 }
 
-app.set('trust proxy', 1); // trust first proxy
+
 app.use(session(sessionOptions));
 
 
